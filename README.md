@@ -452,13 +452,12 @@ MIT License - Feel free to use and modify for your VoIP deployments.
 ## 👨‍💻 Author
 
 **Vishal Kapadi**  
-DevOps Engineer specializing in VoIP, Kubernetes, and cloud infrastructure
+DevOps Engineer
 
 - 🐙 **GitHub:** [github.com/vishalk17](https://github.com/vishalk17)
 - 🎥 **YouTube:** [youtube.com/@vishalk17](https://www.youtube.com/@vishalk17)
 - 💼 **LinkedIn:** [linkedin.com/in/vishal-kapadi](https://www.linkedin.com/in/vishal-kapadi/)
 
-Subscribe to my YouTube channel for DevOps deep-dives!
 
 ---
 

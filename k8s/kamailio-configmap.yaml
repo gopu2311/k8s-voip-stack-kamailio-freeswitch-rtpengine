@@ -126,7 +126,7 @@ data:
     
     
     # ----- rtpengine params -----
-    # Connect to RTPengine on host network
+    # Connect to RTPengine on localhost (hostNetwork co-located with Kamailio)
     modparam("rtpengine", "rtpengine_sock", "udp:127.0.0.1:22222")
     
     ####### Routing Logic #########
@@ -161,7 +161,7 @@ data:
     
         # Anchor RTP if INVITE has SDP
         if (is_method("INVITE") && has_body("application/sdp")) {
-            rtpengine_manage("force trust-address replace-origin replace-session-connection");
+            rtpengine_offer("trust-address replace-origin replace-session-connection ICE=remove");
         }
     
         # 4. Authentication and registration
@@ -218,7 +218,7 @@ data:
     
         # Update RTP on 183/2xx responses with SDP
         if ((t_check_status("183") || t_check_status("2[0-9][0-9]")) && has_body("application/sdp")) {
-            rtpengine_manage("force trust-address replace-origin replace-session-connection");
+            rtpengine_answer("trust-address replace-origin replace-session-connection ICE=remove");
         }
         
         if (nat_uac_test("19")) {

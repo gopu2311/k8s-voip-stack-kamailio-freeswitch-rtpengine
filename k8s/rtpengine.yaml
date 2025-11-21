@@ -45,7 +45,7 @@ spec:
                 - NET_ADMIN
                 - SYS_ADMIN
           env:
-            - name: NODE_IP
+            - name: PRIVATE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
@@ -54,4 +54,19 @@ spec:
           args:
             - -c
             - |
-              /usr/sbin/rtpengine --interface=$NODE_IP --listen-ng=127.0.0.1:22222 --port-min=10000 --port-max=20000 --log-stderr --foreground
+              # Auto-discover node's public IP from AWS metadata service
+              # This works on any EKS node without hardcoding
+              EXTERNAL_IP=$(curl -s http://ifconfig.me || echo "${PRIVATE_IP}")
+
+              echo "Starting RTPengine with:"
+              echo "  Private IP: ${PRIVATE_IP}"
+              echo "  Public IP: ${EXTERNAL_IP}"
+
+              # Advertise PUBLIC IP in SDP, bind on PRIVATE IP for RTP
+              /usr/sbin/rtpengine \
+                --interface=${PRIVATE_IP}!${EXTERNAL_IP} \
+                --listen-ng=127.0.0.1:22222 \
+                --port-min=10000 \
+                --port-max=20000 \
+                --log-stderr \
+                --foreground
