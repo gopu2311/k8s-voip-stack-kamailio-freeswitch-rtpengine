@@ -1,7 +1,7 @@
 # Author: Vishal Kapadi (github.com/vishalk17)
 # YouTube: youtube.com/@vishalk17
 # LinkedIn: linkedin.com/in/vishal-kapadi
-#
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,15 +10,13 @@ metadata:
 data:
   init.sql: |
     -- Kamailio PostgreSQL Database Schema
-    -- Version table (Kamailio tüm tablolar için versiyon kontrolü yapar)
-    
+
     CREATE TABLE version (
         table_name VARCHAR(32) NOT NULL,
         table_version INTEGER DEFAULT 0 NOT NULL,
         CONSTRAINT version_t_name_idx PRIMARY KEY (table_name)
     );
-    
-    -- Subscriber table (Kullanıcı kimlik bilgileri)
+
     CREATE TABLE subscriber (
         id SERIAL PRIMARY KEY,
         username VARCHAR(64) NOT NULL DEFAULT '',
@@ -29,13 +27,12 @@ data:
         ha1b VARCHAR(64) NOT NULL DEFAULT '',
         rpid VARCHAR(64) DEFAULT NULL
     );
-    
+
     CREATE INDEX subscriber_account_idx ON subscriber (username, domain);
     CREATE UNIQUE INDEX subscriber_username_idx ON subscriber (username, domain);
-    
+
     INSERT INTO version (table_name, table_version) VALUES ('subscriber', 7);
-    
-    -- Location table (Kullanıcı kayıt bilgileri - REGISTER)
+
     CREATE TABLE location (
         id SERIAL PRIMARY KEY,
         ruid VARCHAR(64) NOT NULL DEFAULT '',
@@ -61,14 +58,13 @@ data:
         keepalive INTEGER NOT NULL DEFAULT 0,
         partition INTEGER NOT NULL DEFAULT 0
     );
-    
+
     CREATE INDEX location_account_contact_idx ON location (username, domain, contact);
     CREATE INDEX location_expires_idx ON location (expires);
     CREATE INDEX location_connection_idx ON location (server_id, connection_id);
-    
+
     INSERT INTO version (table_name, table_version) VALUES ('location', 9);
-    
-    -- Dispatcher table (FreeSWITCH gibi backend sunucular için)
+
     CREATE TABLE dispatcher (
         id SERIAL PRIMARY KEY,
         setid INTEGER NOT NULL DEFAULT 0,
@@ -78,13 +74,11 @@ data:
         attrs VARCHAR(128) NOT NULL DEFAULT '',
         description VARCHAR(64) NOT NULL DEFAULT ''
     );
-    
+
     CREATE INDEX dispatcher_setid_idx ON dispatcher (setid);
-    
+
     INSERT INTO version (table_name, table_version) VALUES ('dispatcher', 4);
-    
-    -- Test kullanıcısı ekleyelim (şifre: test123)
-    -- ha1 = MD5(username:realm:password) = MD5(test:kamailio:test123)
+
     INSERT INTO subscriber (username, domain, password, ha1, ha1b) 
     VALUES (
         'test',
@@ -93,8 +87,7 @@ data:
         MD5('test:kamailio:test123'),
         MD5('test@kamailio:kamailio:test123')
     );
-    
-    -- FreeSWITCH dispatcher kaydı
+
     INSERT INTO dispatcher (setid, destination, flags, priority, attrs, description)
     VALUES (1, 'sip:freeswitch:5060', 0, 0, '', 'FreeSWITCH Backend');
 ---
@@ -135,14 +128,10 @@ spec:
         - name: init-script
           configMap:
             name: kamailio-db-init
-  volumeClaimTemplates:
-    - metadata:
-        name: postgres-data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
+
+        # ❗ EmptyDir = Ephemeral DB (NO PERSISTENCE)
+        - name: postgres-data
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

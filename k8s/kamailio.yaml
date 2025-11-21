@@ -22,7 +22,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       # Only schedule on nodes labeled for VoIP workloads
       nodeSelector:
-        voip-enabled: "true"
+        kubernetes.io/hostname: ip-192-168-26-180.ap-south-1.compute.internal
       # CRITICAL: Ensure Kamailio runs on same node as RTPengine
       affinity:
         podAffinity:

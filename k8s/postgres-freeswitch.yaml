@@ -1,7 +1,7 @@
 # Author: Vishal Kapadi (github.com/vishalk17)
 # YouTube: youtube.com/@vishalk17
 # LinkedIn: linkedin.com/in/vishal-kapadi
-#
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -56,32 +56,23 @@ spec:
               mountPath: /docker-entrypoint-initdb.d
           livenessProbe:
             exec:
-              command:
-                - pg_isready
-                - -U
-                - postgres
+              command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 10
             periodSeconds: 5
           readinessProbe:
             exec:
-              command:
-                - pg_isready
-                - -U
-                - postgres
+              command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 5
             periodSeconds: 5
+
       volumes:
         - name: init-script
           configMap:
             name: freeswitch-db-init
-  volumeClaimTemplates:
-    - metadata:
-        name: postgres-data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
+
+        # ❗ EmptyDir = No persistence
+        - name: postgres-data
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
