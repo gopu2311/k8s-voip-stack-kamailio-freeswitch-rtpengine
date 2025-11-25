@@ -17,13 +17,7 @@ spec:
       labels:
         app: kamailio
     spec:
-      dnsPolicy: ClusterFirst
-
-      # Schedule Kamailio only on SIP nodes (Node-1 & Node-2)
-      nodeSelector:
-        role: sip
-
-      # Ensure each Kamailio replica runs on a different node
+      # Ensure each Kamailio replica runs on a different node (for HA)
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
