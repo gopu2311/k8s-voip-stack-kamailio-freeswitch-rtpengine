@@ -46,9 +46,10 @@ spec:
             - -c
             - |
 
+              # Bind to private IP, advertise public IP in SDP
               /usr/sbin/rtpengine \
-                --interface=192.168.32.28 \
-                --listen-ng=22222 \
+                --interface=192.168.32.28!35.154.207.150 \
+                --listen-ng=192.168.32.28:22222 \
                 --port-min=10000 \
                 --port-max=20000 \
                 --log-stderr \
