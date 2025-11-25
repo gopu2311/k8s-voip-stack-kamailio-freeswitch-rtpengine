@@ -46,8 +46,11 @@ data:
     
     
     # FreeSWITCH connection
-    #!define FREESWITCH_IP "192.168.28.67"
+    #!define FREESWITCH_IP "freeswitch"
     #!define FREESWITCH_PORT "5060"
+    
+    # RTPengine connection (update this if RTPengine moves to different node)
+    #!define RTPENGINE_SOCK "udp:192.168.32.28:22222"
     
     ####### Modules Section #########
     
@@ -126,8 +129,8 @@ data:
     
     
     # ----- rtpengine params -----
-    # Connect to RTPengine on localhost (hostNetwork co-located with Kamailio)
-    modparam("rtpengine", "rtpengine_sock", "udp:192.168.32.28:22222")
+    # Connect to RTPengine (using hostNetwork on specific node)
+    modparam("rtpengine", "rtpengine_sock", RTPENGINE_SOCK)
 
 
     
@@ -205,7 +208,7 @@ data:
     
         # If not local/internal, forward to FreeSWITCH
         xlog("L_INFO", "External call - Forwarding to FreeSWITCH from $fu to $ru\n");
-        $du = "sip:192.168.28.67:5060";
+        $du = "sip:freeswitch:5060";
         
         t_on_reply("NAT_REPLY");
         if (!t_relay()) {
