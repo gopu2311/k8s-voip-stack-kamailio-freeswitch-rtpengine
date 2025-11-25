@@ -45,11 +45,20 @@ spec:
           args:
             - -c
             - |
-
+              # Auto-discover public IP
+              EXTERNAL_IP=$(curl -s --max-time 5 ifconfig.me || echo "${PRIVATE_IP}")
+              
+              echo "========================================"
+              echo "RTPengine Starting"
+              echo "  Private IP: ${PRIVATE_IP}"
+              echo "  Public IP: ${EXTERNAL_IP}"
+              echo "  Listen NG: ${PRIVATE_IP}:22222"
+              echo "========================================"
+              
               # Bind to private IP, advertise public IP in SDP
               /usr/sbin/rtpengine \
-                --interface=192.168.32.28!35.154.207.150 \
-                --listen-ng=192.168.32.28:22222 \
+                --interface=${PRIVATE_IP}!${EXTERNAL_IP} \
+                --listen-ng=${PRIVATE_IP}:22222 \
                 --port-min=10000 \
                 --port-max=20000 \
                 --log-stderr \
