@@ -31,8 +31,8 @@ data:
     
     # Auto-detect IP addresses and ports
     auto_aliases=yes
-    listen=udp:0.0.0.0:5060
-    
+    listen=0.0.0.0:5060 advertise k8s-sip-kamailio-931698461a-506747a926c3e56d.elb.ap-south-1.amazonaws.com:5060
+
     ####### Defines - Variables #########
     
     #!define WITH_POSTGRES
@@ -46,7 +46,7 @@ data:
     
     
     # FreeSWITCH connection
-    #!define FREESWITCH_IP "freeswitch"
+    #!define FREESWITCH_IP "192.168.28.67"
     #!define FREESWITCH_PORT "5060"
     
     ####### Modules Section #########
@@ -127,7 +127,9 @@ data:
     
     # ----- rtpengine params -----
     # Connect to RTPengine on localhost (hostNetwork co-located with Kamailio)
-    modparam("rtpengine", "rtpengine_sock", "udp:127.0.0.1:22222")
+    modparam("rtpengine", "rtpengine_sock", "udp:192.168.32.28:22222")
+
+
     
     ####### Routing Logic #########
     
@@ -203,7 +205,7 @@ data:
     
         # If not local/internal, forward to FreeSWITCH
         xlog("L_INFO", "External call - Forwarding to FreeSWITCH from $fu to $ru\n");
-        $du = "sip:freeswitch:5060";
+        $du = "sip:192.168.28.67:5060";
         
         t_on_reply("NAT_REPLY");
         if (!t_relay()) {

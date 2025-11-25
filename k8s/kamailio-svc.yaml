@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kamailio
+  namespace: sip
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "TCP"   # correct
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "5060"      # correct
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  selector:
+    app: kamailio
+  ports:
+    - name: sip-udp
+      protocol: UDP
+      port: 5060
+      targetPort: 5060
+      nodePort: 30060

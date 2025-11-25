@@ -17,6 +17,22 @@ spec:
       labels:
         app: freeswitch
     spec:
+      # Only schedule on SIP nodes (Node1 + Node2)
+      nodeSelector:
+        role: sip
+
+      # Make sure FS pods run on different nodes
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - freeswitch
+              topologyKey: kubernetes.io/hostname
+
       containers:
         - name: freeswitch
           image: vishalk17/freeswitch-1.10.12:v1.1

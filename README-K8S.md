@@ -9,11 +9,11 @@ Complete guide for deploying Kamailio + FreeSWITCH + RTPengine on Kubernetes.
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Node (hostNetwork)                   │
-│  ┌──────────────┐              ┌──────────────┐        │
-│  │  Kamailio    │◄────────────►│  RTPengine   │        │
-│  │ (SIP Proxy)  │  localhost   │ (Media Proxy)│        │
-│  │  :5060       │  :22222      │ :10000-20000 │        │
-│  └──────┬───────┘              └──────────────┘        │
+│  ┌──────────────┐              ┌──────────────┐         │
+│  │  Kamailio    │◄────────────►│  RTPengine   │         │
+│  │ (SIP Proxy)  │  localhost   │ (Media Proxy)│         │
+│  │  :5060       │  :22222      │ :10000-20000 │         │
+│  └──────┬───────┘              └──────────────┘         │
 │         │                                               │
 └─────────┼───────────────────────────────────────────────┘
           │
@@ -452,12 +452,13 @@ MIT License - Feel free to use and modify for your VoIP deployments.
 ## 👨‍💻 Author
 
 **Vishal Kapadi**  
-DevOps Engineer
+DevOps Engineer specializing in VoIP, Kubernetes, and cloud infrastructure
 
 - 🐙 **GitHub:** [github.com/vishalk17](https://github.com/vishalk17)
 - 🎥 **YouTube:** [youtube.com/@vishalk17](https://www.youtube.com/@vishalk17)
 - 💼 **LinkedIn:** [linkedin.com/in/vishal-kapadi](https://www.linkedin.com/in/vishal-kapadi/)
 
+Subscribe to my YouTube channel for DevOps deep-dives!
 
 ---
 

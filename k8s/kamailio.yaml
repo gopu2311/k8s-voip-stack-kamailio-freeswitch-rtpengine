@@ -17,22 +17,22 @@ spec:
       labels:
         app: kamailio
     spec:
-      # Use hostNetwork to communicate with RTPengine on host
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
-      # Only schedule on nodes labeled for VoIP workloads
+      dnsPolicy: ClusterFirst
+
+      # Schedule Kamailio only on SIP nodes (Node-1 & Node-2)
       nodeSelector:
-        kubernetes.io/hostname: ip-192-168-26-180.ap-south-1.compute.internal
-      # CRITICAL: Ensure Kamailio runs on same node as RTPengine
+        role: sip
+
+      # Ensure each Kamailio replica runs on a different node
       affinity:
-        podAffinity:
+        podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
                   - key: app
                     operator: In
                     values:
-                      - rtpengine
+                      - kamailio
               topologyKey: kubernetes.io/hostname
       containers:
         - name: kamailio
@@ -58,19 +58,3 @@ spec:
         - name: kamailio-config
           configMap:
             name: kamailio-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: kamailio
-  namespace: sip
-spec:
-  type: NodePort
-  selector:
-    app: kamailio
-  ports:
-    - name: sip-udp
-      protocol: UDP
-      port: 5060
-      targetPort: 5060
-      nodePort: 30060
